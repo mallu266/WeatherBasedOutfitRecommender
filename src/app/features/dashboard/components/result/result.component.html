@@ -1,1 +1,12 @@
-<p>result works!</p>
+<ng-container *ngIf="weather; else noData">
+  <mat-card>
+    <h3>Weather for {{ weather.name }}, {{ weather.sys?.country }}</h3>
+    <p>Temperature: {{ weather.main?.temp }} °C</p>
+    <p>Weather: {{ weather.weather[0]?.description }}</p>
+    <p>Humidity: {{ weather.main?.humidity }}%</p>
+    <p>Wind: {{ weather.wind?.speed }} m/s</p>
+  </mat-card>
+</ng-container>
+<ng-template #noData>
+  <mat-card>No weather data available.</mat-card>
+</ng-template>
