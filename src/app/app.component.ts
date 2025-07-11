@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -6,6 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './core/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -22,21 +24,34 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   title = 'WeatherBasedOutfitRecommender';
   apiKeyForm: FormGroup;
-
-  constructor(readonly fb: FormBuilder, readonly router: Router) {
+  private readonly destroy$ = new Subject<void>();
+  isLoggedIn: boolean = false
+  constructor(readonly fb: FormBuilder, readonly router: Router, private readonly authService: AuthService) {
     this.apiKeyForm = this.fb.group({
       apiKey: ['', Validators.required],
     });
+
+    this.authService.isAuthenticated$.pipe(takeUntil(this.destroy$))
+      .subscribe(isAuth => {
+        console.log("isAuth", isAuth)
+        this.isLoggedIn = isAuth
+      });
   }
 
   onSubmit() {
     if (this.apiKeyForm.valid) {
       const apiKey = this.apiKeyForm.value.apiKey;
       localStorage.setItem('weatherApiKey', apiKey);
+      this.authService.updateAuthStatus();
       this.router.navigate(['/dashboard']);
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
