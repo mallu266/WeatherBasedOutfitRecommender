@@ -93,3 +93,4 @@ Bonus Features
 Angular Material is an official Angular library that implements Material Design components for Angular apps.
 To install liberary use command
         ng add @angular/material@19
+        npm inatall @angular/animations
