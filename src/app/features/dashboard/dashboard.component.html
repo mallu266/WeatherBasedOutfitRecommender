@@ -1,1 +1,17 @@
-<p>dashboard works!</p>
+<mat-grid-list cols="2" rowHeight="100px" gutterSize="16px">
+    <!-- First row: 2 columns, each colspan 2 (so each takes the full width, stacked) -->
+    <mat-grid-tile colspan="2">
+        <app-search></app-search>
+    </mat-grid-tile>
+    <!-- Second row: 2 columns -->
+    <mat-grid-tile>
+        <app-result></app-result>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <app-recomandation></app-recomandation>
+    </mat-grid-tile>
+    <!-- Third row: 1 column, colspan 2 -->
+    <mat-grid-tile colspan="2">
+        <app-history></app-history>
+    </mat-grid-tile>
+</mat-grid-list>

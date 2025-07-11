@@ -1,0 +1,10 @@
+<mat-card>
+  <mat-form-field style="width: 100%;" appearance="outline">
+    <input type="text" matInput placeholder="Search city" [formControl]="searchControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-card>
