@@ -87,3 +87,9 @@ Bonus Features
 ● Add animations for changing weather state or card transitions.
 ● Allow theme toggle (light/dark) for visual polish.
 ● Mock offline behavior or retry logic.
+
+
+## Install Material Angular
+Angular Material is an official Angular library that implements Material Design components for Angular apps.
+To install liberary use command
+        ng add @angular/material@19
