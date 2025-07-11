@@ -57,3 +57,33 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+## Project Requirement Document
+Requirements
+1. Core Features
+● City Search Input
+○ Type a city name and trigger fetch from OpenWeatherMap API or similar
+(mocked API also okay).
+
+● Weather Display
+○ Show temperature, condition (cloudy, sunny, rainy), wind speed, and humidity.
+● Outfit Recommendation
+○ Based on weather (e.g., "Take an umbrella", "Wear a jacket", "Sunglasses
+suggested").
+
+● History
+○ Show a small list of the last 5 searched cities (in-memory is fine).
+
+2. Technical Requirements
+● Use React or your preferred modern framework.
+● Use state management for search history and current weather (Context, Redux, etc.).
+● Focus on modular component design and code structure.
+● Provide graceful error handling (e.g., invalid city, API failure).
+● Responsive design with attention to layout and interactions.
+
+Bonus Features
+● Use auto-suggest while typing city names (e.g., debounce + suggestions from API).
+● Add animations for changing weather state or card transitions.
+● Allow theme toggle (light/dark) for visual polish.
+● Mock offline behavior or retry logic.
