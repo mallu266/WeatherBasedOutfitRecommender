@@ -100,8 +100,8 @@ export class DashboardComponent {
     this.appHistory = 2;
   }
 
-  searchResult(cityList: string[]): void {
-    if (!cityList || cityList.length === 0) {
+  onCitySelected(selectedCity: string): void {
+    if (!selectedCity) {
       this.weatherStateService.clearCurrentWeather();
       return;
     }
@@ -111,8 +111,8 @@ export class DashboardComponent {
       this.snackbarService.showError('API key not found. Please authenticate first.');
       return;
     }
-    const city = cityList[0];
-    const cityName = this.extractCityName(city);
+    
+    const cityName = this.extractCityName(selectedCity);
     this.fetchWeatherData(cityName, apiKey);
   }
 

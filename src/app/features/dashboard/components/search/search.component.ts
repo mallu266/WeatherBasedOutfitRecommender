@@ -17,7 +17,8 @@ import { SnackbarService } from '../../../../core/snackbar.service';
   styleUrl: './search.component.scss'
 })
 export class SearchComponent {
-  @Output() searchResult = new EventEmitter<any>();
+  @Output() searchResult = new EventEmitter<string[]>();
+  @Output() citySelected = new EventEmitter<string>();
   searchControl = new FormControl('');
   options: string[] = [];
   isLoading = false;
@@ -39,7 +40,6 @@ export class SearchComponent {
       .subscribe({
         next: (result) => {
           this.options = result;
-          this.searchResult.emit(result);
           this.isLoading = false;
         },
         error: (error) => {
@@ -48,6 +48,11 @@ export class SearchComponent {
           console.error('Search subscription error:', error);
         }
       });
+  }
+
+  onOptionSelected(selectedValue: string): void {
+    // Emit the selected city to trigger weather API call
+    this.citySelected.emit(selectedValue);
   }
 
   fetchCitiesFromOpenWeatherMap(query: string | null) {

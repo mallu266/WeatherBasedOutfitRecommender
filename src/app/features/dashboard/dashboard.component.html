@@ -23,7 +23,7 @@
 
         <!-- First row: 2 columns, each colspan 2 (so each takes the full width, stacked) -->
         <mat-grid-tile [colspan]="appSearch">
-            <app-search (searchResult)="searchResult($event)"></app-search>
+            <app-search (citySelected)="onCitySelected($event)"></app-search>
         </mat-grid-tile>
         <!-- Second row: 2 columns -->
         <mat-grid-tile [colspan]="appResult">
