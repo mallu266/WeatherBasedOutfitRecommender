@@ -1,6 +1,9 @@
 <mat-card>
   <mat-form-field style="width: 100%;" appearance="outline">
     <input type="text" matInput placeholder="Search city" [formControl]="searchControl" [matAutocomplete]="auto">
+    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()" *ngIf="searchControl.value">
+      <mat-icon>close</mat-icon>
+    </button>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event.option.value)">
       <mat-option *ngFor="let option of options" [value]="option">
         {{ option }}

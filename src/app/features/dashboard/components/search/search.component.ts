@@ -3,6 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -12,13 +14,14 @@ import { SnackbarService } from '../../../../core/snackbar.service';
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatAutocompleteModule, MatInputModule, MatCardModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, MatAutocompleteModule, MatInputModule, MatCardModule, MatButtonModule, MatIconModule, HttpClientModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
 })
 export class SearchComponent {
   @Output() searchResult = new EventEmitter<string[]>();
   @Output() citySelected = new EventEmitter<string>();
+  @Output() searchCleared = new EventEmitter<void>();
   searchControl = new FormControl('');
   options: string[] = [];
   isLoading = false;
@@ -53,6 +56,14 @@ export class SearchComponent {
   onOptionSelected(selectedValue: string): void {
     // Emit the selected city to trigger weather API call
     this.citySelected.emit(selectedValue);
+  }
+
+  clearSearch(): void {
+    this.searchControl.setValue('');
+    this.options = [];
+    this.isLoading = false;
+    // Emit event to clear weather data
+    this.searchCleared.emit();
   }
 
   fetchCitiesFromOpenWeatherMap(query: string | null) {

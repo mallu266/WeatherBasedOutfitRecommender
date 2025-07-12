@@ -116,6 +116,11 @@ export class DashboardComponent {
     this.fetchWeatherData(cityName, apiKey);
   }
 
+  onSearchCleared(): void {
+    // Clear current weather data when search is cleared
+    this.weatherStateService.clearCurrentWeather();
+  }
+
   private getApiKey(): string | null {
     return localStorage.getItem('weatherApiKey');
   }
