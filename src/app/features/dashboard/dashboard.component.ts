@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { SearchComponent } from './components/search/search.component';
 import { ResultComponent } from './components/result/result.component';
 import { RecomandationComponent } from './components/recomandation/recomandation.component';
@@ -8,13 +11,26 @@ import { HistoryComponent } from "./components/history/history.component";
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { SnackbarService } from '../../core/snackbar.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatGridListModule, MatCardModule, SearchComponent, ResultComponent, RecomandationComponent, HistoryComponent, HttpClientModule, MatDialogModule],
+  imports: [
+    MatGridListModule, 
+    MatCardModule, 
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    SearchComponent, 
+    ResultComponent, 
+    RecomandationComponent, 
+    HistoryComponent, 
+    HttpClientModule, 
+    MatDialogModule
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -32,6 +48,7 @@ export class DashboardComponent {
     private readonly http: HttpClient,
     private readonly breakpointObserver: BreakpointObserver,
     private readonly dialog: MatDialog,
+    private readonly router: Router,
     private readonly snackbarService: SnackbarService
   ) {
     this.initializeResponsiveLayout();
@@ -156,5 +173,20 @@ export class DashboardComponent {
       width: '350px',
       maxWidth: '90vw',
     });
+  }
+
+  logout(): void {
+    // Clear API key from localStorage
+    localStorage.removeItem('weatherApiKey');
+    
+    // Clear any stored data
+    this.weather = null;
+    this.history = [];
+    
+    // Show success message
+    this.snackbarService.showSuccess('Logged out successfully. API key cleared from memory.');
+    
+    // Navigate back to landing page
+    this.router.navigate(['/']);
   }
 }
