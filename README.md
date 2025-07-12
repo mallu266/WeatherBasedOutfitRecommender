@@ -1,6 +1,13 @@
 # Weather-Based Outfit Recommender 🌤️👕
 
 A modern Angular application that provides personalized clothing recommendations based on real-time weather data. Built with Angular 19, Material Design, and OpenWeatherMap API.
+<img width="1360" height="607" alt="image" src="https://github.com/user-attachments/assets/f780b398-3345-4239-b5d3-d93d822aeb9b" />
+
+<img width="1360" height="759" alt="image" src="https://github.com/user-attachments/assets/22bf5e2a-4bdd-41f9-8c40-a0dfb4181b1b" />
+<img width="1360" height="759" alt="image" src="https://github.com/user-attachments/assets/795e205d-3a38-4833-a77a-bf043ee805af" />
+<img width="1360" height="759" alt="image" src="https://github.com/user-attachments/assets/77bd2161-0e8f-49b7-a2c2-19bf3e0fa8e1" />
+<img width="1360" height="607" alt="image" src="https://github.com/user-attachments/assets/b3785f1e-8a23-4c63-92a3-1fdc728b6a9b" />
+
 
 ![Angular](https://img.shields.io/badge/Angular-19.2.14-red.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue.svg)
