@@ -17,6 +17,9 @@
                     <mat-icon class="user-icon">person</mat-icon>
                     <span class="user-label">User</span>
                 </div>
+                <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle theme" class="theme-toggle-button">
+                    <mat-icon>{{ isDarkTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+                </button>
                 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User menu" class="menu-button">
                     <mat-icon>more_vert</mat-icon>
                 </button>

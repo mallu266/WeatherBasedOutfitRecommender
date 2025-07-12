@@ -16,6 +16,7 @@ import { SnackbarService } from '../../core/snackbar.service';
 import { WeatherStateService, WeatherData, SearchHistoryItem } from '../../core/services/weather-state.service';
 import { WeatherService } from '../../core/services/weather.service';
 import { AppComponent } from '../../app.component';
+import { ThemeService } from '../../core/services/theme.service';
 import { 
   weatherFadeAnimation, 
   cardSlideAnimation, 
@@ -61,6 +62,7 @@ export class DashboardComponent {
   private readonly weatherStateService = inject(WeatherStateService);
   private readonly weatherService = inject(WeatherService);
   private readonly appComponent = inject(AppComponent);
+  private readonly themeService = inject(ThemeService);
 
   // Layout properties
   cols = 2;
@@ -74,9 +76,17 @@ export class DashboardComponent {
   history = computed(() => this.weatherStateService.searchHistory());
   isLoading = computed(() => this.weatherStateService.isLoading());
   error = computed(() => this.weatherStateService.error());
+  isDarkTheme = computed(() => this.themeService.isDarkTheme());
 
   constructor() {
     this.initializeResponsiveLayout();
+    this.themeService.listenForSystemThemeChanges();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+    const newTheme = this.isDarkTheme() ? 'Dark' : 'Light';
+    this.snackbarService.showSuccess(`${newTheme} theme activated`);
   }
 
   private initializeResponsiveLayout(): void {
