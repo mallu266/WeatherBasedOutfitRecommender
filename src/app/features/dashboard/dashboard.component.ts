@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { SnackbarService } from '../../core/snackbar.service';
 import { WeatherStateService, WeatherData, SearchHistoryItem } from '../../core/services/weather-state.service';
 import { WeatherService } from '../../core/services/weather.service';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,6 +44,7 @@ export class DashboardComponent {
   private readonly snackbarService = inject(SnackbarService);
   private readonly weatherStateService = inject(WeatherStateService);
   private readonly weatherService = inject(WeatherService);
+  private readonly appComponent = inject(AppComponent);
 
   // Layout properties
   cols = 2;
@@ -168,10 +170,13 @@ export class DashboardComponent {
     // Reset all state
     this.weatherStateService.resetState();
     
+    // Update app component auth state
+    this.appComponent.updateAuthState();
+    
     // Show success message
     this.snackbarService.showSuccess('Logged out successfully. API key cleared from memory.');
     
-    // Navigate back to landing page
+    // Navigate to root - app component will handle showing landing page
     this.router.navigate(['/']);
   }
 }

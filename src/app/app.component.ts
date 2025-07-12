@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -7,8 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './core/services/auth.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,34 +24,45 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit {
   title = 'WeatherBasedOutfitRecommender';
   apiKeyForm: FormGroup;
-  private readonly destroy$ = new Subject<void>();
-  isLoggedIn: boolean = false
-  constructor(readonly fb: FormBuilder, readonly router: Router, private readonly authService: AuthService) {
+  private readonly router = inject(Router);
+
+  // Signal to track authentication state
+  private readonly authState = signal(!!localStorage.getItem('weatherApiKey'));
+
+  // Computed property to check if user is logged in
+  isLoggedIn = computed(() => this.authState());
+
+  constructor(readonly fb: FormBuilder) {
     this.apiKeyForm = this.fb.group({
       apiKey: ['', Validators.required],
     });
+  }
 
-    this.authService.isAuthenticated$.pipe(takeUntil(this.destroy$))
-      .subscribe(isAuth => {
-        console.log("isAuth", isAuth)
-        this.isLoggedIn = isAuth
-      });
+  ngOnInit(): void {
+    // If user is authenticated and on root path, redirect to dashboard
+    if (this.isLoggedIn() && this.router.url === '/') {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   onSubmit() {
     if (this.apiKeyForm.valid) {
       const apiKey = this.apiKeyForm.value.apiKey;
       localStorage.setItem('weatherApiKey', apiKey);
-      this.authService.updateAuthStatus();
+      
+      // Update authentication state
+      this.authState.set(true);
+      
+      // Navigate to dashboard
       this.router.navigate(['/dashboard']);
     }
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+  // Method to update auth state (can be called from other components)
+  updateAuthState(): void {
+    this.authState.set(!!localStorage.getItem('weatherApiKey'));
   }
 }

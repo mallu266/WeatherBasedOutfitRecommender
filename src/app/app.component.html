@@ -1,4 +1,5 @@
-<div class="container" *ngIf="!isLoggedIn">
+<!-- Landing page when not authenticated -->
+<div class="container" *ngIf="!isLoggedIn()">
   <mat-grid-list cols="1" rowHeight="100%" class="center-grid">
     <mat-grid-tile>
       <div class="auth-container">
@@ -30,4 +31,6 @@
     </mat-grid-tile>
   </mat-grid-list>
 </div>
-<router-outlet></router-outlet>
+
+<!-- Router outlet when authenticated -->
+<router-outlet *ngIf="isLoggedIn()"></router-outlet>
