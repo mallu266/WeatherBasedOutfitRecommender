@@ -1,1 +1,12 @@
-<p>history works!</p>
+<mat-card>
+    <h3>Last 5 Searches</h3>
+    <ul *ngIf="history && history.length; else noHistory">
+        <li *ngFor="let item of history" (click)="selectHistory(item)" style="cursor:pointer;">
+            <strong>{{ item.name }}, {{ item.sys?.country }}</strong> - {{ item.main?.temp }} °C, {{
+            item.weather[0]?.description }}
+        </li>
+    </ul>
+    <ng-template #noHistory>
+        <p>No search history yet.</p>
+    </ng-template>
+</mat-card>

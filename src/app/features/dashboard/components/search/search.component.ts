@@ -4,9 +4,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { SnackbarService } from '../../../../core/snackbar.service';
 
 @Component({
   selector: 'app-search',
@@ -19,33 +20,82 @@ export class SearchComponent {
   @Output() searchResult = new EventEmitter<any>();
   searchControl = new FormControl('');
   options: string[] = [];
+  isLoading = false;
 
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly snackbarService: SnackbarService
+  ) {
+    this.initializeSearchSubscription();
+  }
+
+  private initializeSearchSubscription(): void {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
         switchMap(value => this.fetchCitiesFromOpenWeatherMap(value))
       )
-      .subscribe(result => {
-        this.options = result;
-        this.searchResult.emit(result);
+      .subscribe({
+        next: (result) => {
+          this.options = result;
+          this.searchResult.emit(result);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.snackbarService.showError('Failed to fetch city suggestions.');
+          this.isLoading = false;
+          console.error('Search subscription error:', error);
+        }
       });
   }
 
   fetchCitiesFromOpenWeatherMap(query: string | null) {
-    if (!query) return of([]);
-    const apiKey = localStorage.getItem('weatherApiKey');
-    if (!apiKey) return of([]);
-    // OpenWeatherMap city search API (geocoding)
+    if (!query || query.trim().length < 2) {
+      return of([]);
+    }
+
+    const apiKey = this.getApiKey();
+    if (!apiKey) {
+      this.snackbarService.showError('API key not found. Please authenticate first.');
+      return of([]);
+    }
+
+    this.isLoading = true;
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${apiKey}`;
+    
     return this.http.get<any[]>(url).pipe(
-      // Map the result to city names for autocomplete
       switchMap((results: any[]) => {
-        if (!results || !Array.isArray(results)) return of([]);
-        const names = results.map(city => `${city.name}${city.state ? ', ' + city.state : ''}, ${city.country}`);
+        if (!results || !Array.isArray(results)) {
+          return of([]);
+        }
+        const names = results.map(city => 
+          `${city.name}${city.state ? ', ' + city.state : ''}, ${city.country}`
+        );
         return of(names);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        this.handleHttpError(error);
+        return of([]);
       })
     );
+  }
+
+  private getApiKey(): string | null {
+    return localStorage.getItem('weatherApiKey');
+  }
+
+  private handleHttpError(error: HttpErrorResponse): void {
+    let errorMessage = 'Failed to fetch city suggestions.';
+    
+    if (error.status === 401) {
+      errorMessage = 'Invalid API key. Please check your authentication.';
+    } else if (error.status === 429) {
+      errorMessage = 'Too many requests. Please try again later.';
+    } else if (error.status >= 500) {
+      errorMessage = 'Server error. Please try again later.';
+    }
+    
+    this.snackbarService.showError(errorMessage);
   }
 }
