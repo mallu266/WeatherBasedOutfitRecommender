@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { SearchHistoryItem } from '../../../../core/services/weather-state.service';
 
 @Component({
   selector: 'app-history',
@@ -10,10 +11,10 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent {
-  @Input() history: any[] = [];
-  @Output() select = new EventEmitter<any>();
+  @Input() history: SearchHistoryItem[] = [];
+  @Output() select = new EventEmitter<SearchHistoryItem>();
 
-  selectHistory(item: any) {
+  selectHistory(item: SearchHistoryItem) {
     this.select.emit(item);
   }
 }

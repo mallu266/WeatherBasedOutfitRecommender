@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -8,12 +8,13 @@ import { SearchComponent } from './components/search/search.component';
 import { ResultComponent } from './components/result/result.component';
 import { RecomandationComponent } from './components/recomandation/recomandation.component';
 import { HistoryComponent } from "./components/history/history.component";
-import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { catchError, of } from 'rxjs';
 import { SnackbarService } from '../../core/snackbar.service';
+import { WeatherStateService, WeatherData, SearchHistoryItem } from '../../core/services/weather-state.service';
+import { WeatherService } from '../../core/services/weather.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,22 +36,28 @@ import { SnackbarService } from '../../core/snackbar.service';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  weather: any = null;
-  history: any[] = [];
+  // Inject services
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly weatherStateService = inject(WeatherStateService);
+  private readonly weatherService = inject(WeatherService);
+
+  // Layout properties
   cols = 2;
   appSearch = 2;
   appResult = 1;
   appRecomandation = 1;
   appHistory = 2;
-  isLoading = false;
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly breakpointObserver: BreakpointObserver,
-    private readonly dialog: MatDialog,
-    private readonly router: Router,
-    private readonly snackbarService: SnackbarService
-  ) {
+  // Computed values for template
+  weather = computed(() => this.weatherStateService.currentWeather());
+  history = computed(() => this.weatherStateService.searchHistory());
+  isLoading = computed(() => this.weatherStateService.isLoading());
+  error = computed(() => this.weatherStateService.error());
+
+  constructor() {
     this.initializeResponsiveLayout();
   }
 
@@ -65,7 +72,7 @@ export class DashboardComponent {
       next: (result) => {
         this.updateLayoutForBreakpoint(result);
       },
-      error: (error) => {
+      error: () => {
         this.snackbarService.showError('Layout error. Using default layout.');
         // Fallback to default layout
         this.setDefaultLayout();
@@ -95,7 +102,7 @@ export class DashboardComponent {
 
   searchResult(cityList: string[]): void {
     if (!cityList || cityList.length === 0) {
-      this.weather = null;
+      this.weatherStateService.clearCurrentWeather();
       return;
     }
 
@@ -119,57 +126,31 @@ export class DashboardComponent {
   }
 
   private fetchWeatherData(cityName: string, apiKey: string): void {
-    this.isLoading = true;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&units=metric&appid=${apiKey}`;
-    this.http.get(url).pipe(
-      catchError((error: HttpErrorResponse) => {
-        this.handleHttpError(error);
-        return of(null);
-      })
-    ).subscribe({
-      next: (data: any) => {
-        if (data) {
-          this.weather = data;
-          this.addToHistory(data);
-          this.snackbarService.showSuccess(`Weather data loaded for ${cityName}`);
-        }
-        this.isLoading = false;
+    this.weatherStateService.setLoading(true);
+    this.weatherStateService.clearError();
+    
+    this.weatherService.getWeatherData(cityName, apiKey).subscribe({
+      next: (data: WeatherData) => {
+        this.weatherStateService.setCurrentWeather(data);
+        this.snackbarService.showSuccess(`Weather data loaded for ${cityName}`);
+        this.weatherStateService.setLoading(false);
       },
-      error: (error) => {
-        this.snackbarService.showError('Failed to fetch weather data.');
-        this.isLoading = false;
-        console.error('Weather fetch error:', error);
+      error: (errorMessage: string) => {
+        this.weatherStateService.setError(errorMessage);
+        this.snackbarService.showError(errorMessage);
+        this.weatherStateService.setLoading(false);
       }
     });
   }
 
-  private handleHttpError(error: HttpErrorResponse): void {
-    let errorMessage = 'Failed to fetch weather data.';
-    if (error.status === 401) {
-      errorMessage = 'Invalid API key. Please check your authentication.';
-    } else if (error.status === 404) {
-      errorMessage = 'City not found. Please check the spelling.';
-    } else if (error.status === 429) {
-      errorMessage = 'Too many requests. Please try again later.';
-    } else if (error.status >= 500) {
-      errorMessage = 'Server error. Please try again later.';
-    }
-    
-    this.snackbarService.showError(errorMessage);
-  }
-
-  private addToHistory(weatherData: any): void {
-    this.history = [weatherData, ...this.history].slice(0, 5);
-  }
-
-  showRecommendationPopup(weather: any): void {
-    if (!weather) {
+  showRecommendationPopup(historyItem: SearchHistoryItem): void {
+    if (!historyItem || !historyItem.weather) {
       this.snackbarService.showError('No weather data available for recommendations.');
       return;
     }
 
     this.dialog.open(RecomandationComponent, {
-      data: { weather },
+      data: { weather: historyItem.weather },
       width: '350px',
       maxWidth: '90vw',
     });
@@ -179,9 +160,8 @@ export class DashboardComponent {
     // Clear API key from localStorage
     localStorage.removeItem('weatherApiKey');
     
-    // Clear any stored data
-    this.weather = null;
-    this.history = [];
+    // Reset all state
+    this.weatherStateService.resetState();
     
     // Show success message
     this.snackbarService.showSuccess('Logged out successfully. API key cleared from memory.');

@@ -2,6 +2,7 @@ import { Component, Input, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WeatherData } from '../../../../core/services/weather-state.service';
 
 @Component({
   selector: 'app-recomandation',
@@ -11,7 +12,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrl: './recomandation.component.scss'
 })
 export class RecomandationComponent {
-  @Input() weather: any;
+  @Input() weather: WeatherData | null = null;
 
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
     if (data && data.weather) {

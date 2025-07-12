@@ -15,7 +15,7 @@
     </div>
     <mat-grid-list [cols]="cols" rowHeight="250px" gutterSize="20px">
         <!-- Loading Indicator -->
-        <mat-grid-tile [colspan]="cols" *ngIf="isLoading">
+        <mat-grid-tile [colspan]="cols" *ngIf="isLoading()">
             <mat-card>
                 <p>Loading weather data...</p>
             </mat-card>
@@ -27,14 +27,14 @@
         </mat-grid-tile>
         <!-- Second row: 2 columns -->
         <mat-grid-tile [colspan]="appResult">
-            <app-result [weather]="weather"></app-result>
+            <app-result [weather]="weather()"></app-result>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="appRecomandation">
-            <app-recomandation [weather]="weather"></app-recomandation>
+            <app-recomandation [weather]="weather()"></app-recomandation>
         </mat-grid-tile>
         <!-- Third row: 1 column, colspan 2 -->
         <mat-grid-tile [colspan]="appHistory">
-            <app-history [history]="history" (select)="showRecommendationPopup($event)"></app-history>
+            <app-history [history]="history()" (select)="showRecommendationPopup($event)"></app-history>
         </mat-grid-tile>
     </mat-grid-list>
 </section>

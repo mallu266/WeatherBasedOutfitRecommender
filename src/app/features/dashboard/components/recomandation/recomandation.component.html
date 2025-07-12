@@ -2,14 +2,14 @@
   <mat-card>
     <h3>Recommendations</h3>
     <ul>
-      <li *ngIf="weather.weather[0]?.main === 'Rain' || weather.weather[0]?.main === 'Drizzle'">Take an umbrella ☔</li>
-      <li *ngIf="weather.main?.temp < 15">Wear a jacket 🧥</li>
-      <li *ngIf="weather.weather[0]?.main === 'Clear' && weather.main?.temp > 20">Sunglasses suggested 🕶️</li>
-      <li *ngIf="weather.main?.temp >= 30">Stay hydrated and avoid direct sun ☀️</li>
-      <li *ngIf="weather.weather[0]?.main === 'Snow'">Wear warm boots and coat 🥾🧥</li>
-      <li *ngIf="weather.weather[0]?.main === 'Thunderstorm'">Stay indoors if possible ⚡</li>
-      <li *ngIf="weather.weather[0]?.main === 'Clouds' && weather.main?.temp > 15">Light sweater recommended 🧶</li>
-      <li *ngIf="!weather.weather[0]?.main && !weather.main?.temp">No specific recommendation.</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Rain' || weather.weather?.[0]?.main === 'Drizzle'">Take an umbrella ☔</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp < 15">Wear a jacket 🧥</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Clear' && weather.main?.temp && weather.main.temp > 20">Sunglasses suggested</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp >= 30">Stay hydrated and avoid direct sun ☀️</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Snow'">Wear warm boots and coat 🥾🧥</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Thunderstorm'">Stay indoors if possible ⚡</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Clouds' && weather.main?.temp && weather.main.temp > 15">Light sweater recommended</li>
+      <li *ngIf="!weather.weather?.[0]?.main && !weather.main?.temp">No specific recommendation.</li>
     </ul>
   </mat-card>
 </ng-container>

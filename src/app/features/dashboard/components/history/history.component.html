@@ -2,8 +2,10 @@
     <h3>Last 5 Searches</h3>
     <ul *ngIf="history && history.length; else noHistory">
         <li *ngFor="let item of history" (click)="selectHistory(item)" style="cursor:pointer;">
-            <strong>{{ item.name }}, {{ item.sys?.country }}</strong> - {{ item.main?.temp }} °C, {{
-            item.weather[0]?.description }}
+            <strong>{{ item.cityName }}, {{ item.weather.sys?.country }}</strong> - {{ item.weather.main?.temp }} °C, {{
+            item.weather.weather[0]?.description }}
+            <br>
+            <small>{{ item.timestamp | date:'short' }}</small>
         </li>
     </ul>
     <ng-template #noHistory>

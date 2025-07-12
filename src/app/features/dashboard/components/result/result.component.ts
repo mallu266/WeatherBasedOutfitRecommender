@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { WeatherData } from '../../../../core/services/weather-state.service';
 
 @Component({
   selector: 'app-result',
@@ -10,5 +11,5 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './result.component.scss'
 })
 export class ResultComponent {
-  @Input() weather: any;
+  @Input() weather: WeatherData | null = null;
 }
