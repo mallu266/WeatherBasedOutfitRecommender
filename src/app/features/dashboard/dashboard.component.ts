@@ -17,10 +17,10 @@ import { WeatherStateService, WeatherData, SearchHistoryItem } from '../../core/
 import { WeatherService } from '../../core/services/weather.service';
 import { AppComponent } from '../../app.component';
 import { ThemeService } from '../../core/services/theme.service';
-import { 
-  weatherFadeAnimation, 
-  cardSlideAnimation, 
-  loadingAnimation, 
+import {
+  weatherFadeAnimation,
+  cardSlideAnimation,
+  loadingAnimation,
   historyStaggerAnimation,
   gridTileAnimation,
   errorSlideAnimation
@@ -30,16 +30,16 @@ import {
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    MatGridListModule, 
-    MatCardModule, 
+    MatGridListModule,
+    MatCardModule,
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
-    SearchComponent, 
-    ResultComponent, 
-    RecomandationComponent, 
-    HistoryComponent, 
-    HttpClientModule, 
+    SearchComponent,
+    ResultComponent,
+    RecomandationComponent,
+    HistoryComponent,
+    HttpClientModule,
     MatDialogModule
   ],
   templateUrl: './dashboard.component.html',
@@ -115,6 +115,8 @@ export class DashboardComponent {
       this.appResult = 1;
       this.appRecomandation = 1;
       this.appHistory = 1;
+    } else if (result.breakpoints[Breakpoints.Small]) {
+      this.setSmallLayout()
     } else {
       this.setDefaultLayout();
     }
@@ -139,7 +141,7 @@ export class DashboardComponent {
       this.snackbarService.showError('API key not found. Please authenticate first.');
       return;
     }
-    
+
     const cityName = this.extractCityName(selectedCity);
     this.fetchWeatherData(cityName, apiKey);
   }
@@ -161,7 +163,7 @@ export class DashboardComponent {
   private fetchWeatherData(cityName: string, apiKey: string): void {
     this.weatherStateService.setLoading(true);
     this.weatherStateService.clearError();
-    
+
     this.weatherService.getWeatherData(cityName, apiKey).subscribe({
       next: (data: WeatherData) => {
         this.weatherStateService.setCurrentWeather(data);
@@ -197,17 +199,24 @@ export class DashboardComponent {
   logout(): void {
     // Clear API key from localStorage
     localStorage.removeItem('weatherApiKey');
-    
+
     // Reset all state
     this.weatherStateService.resetState();
-    
+
     // Update app component auth state
     this.appComponent.updateAuthState();
-    
+
     // Show success message
     this.snackbarService.showSuccess('Logged out successfully. API key cleared from memory.');
-    
+
     // Navigate to root - app component will handle showing landing page
     this.router.navigate(['/']);
+  }
+  private setSmallLayout(): void {
+    this.cols = 2;
+    this.appSearch = 2;
+    this.appResult = 1;
+    this.appRecomandation = 1;
+    this.appHistory = 2;
   }
 }
