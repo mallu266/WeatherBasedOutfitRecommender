@@ -1,13 +1,37 @@
-<mat-card>
-  <mat-form-field style="width: 100%;" appearance="outline">
-    <input type="text" matInput placeholder="Search city" [formControl]="searchControl" [matAutocomplete]="auto">
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()" *ngIf="searchControl.value">
-      <mat-icon>close</mat-icon>
-    </button>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event.option.value)">
-      <mat-option *ngFor="let option of options" [value]="option">
-        {{ option }}
+<mat-card [@weatherFade]>
+  <div class="search-header">
+    <mat-icon class="search-icon">search</mat-icon>
+    <h3>Find Your City</h3>
+    <p>Search for any city to get weather-based outfit recommendations</p>
+  </div>
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Enter city name</mat-label>
+      <input type="text" matInput placeholder="e.g., London, New York, Tokyo..." [formControl]="searchControl"
+        [matAutocomplete]="auto" class="search-input">
+      <mat-icon matPrefix class="input-icon">location_on</mat-icon>
+      <button matSuffix mat-icon-button aria-label="Clear search" (click)="clearSearch()" *ngIf="searchControl.value"
+        class="clear-button">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon matSuffix *ngIf="isLoading" class="loading-icon">refresh</mat-icon>
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event.option.value)"
+      class="search-autocomplete">
+      <mat-option *ngFor="let option of options" [value]="option" class="search-option">
+        <div class="option-content">
+          <mat-icon class="option-icon">location_city</mat-icon>
+          <span class="option-text">{{ option }}</span>
+        </div>
+      </mat-option>
+      <mat-option *ngIf="options.length === 0 && searchControl.value && !isLoading" value="" disabled
+        class="no-results">
+        <div class="no-results-content">
+          <mat-icon>search_off</mat-icon>
+          <span>No cities found</span>
+        </div>
       </mat-option>
     </mat-autocomplete>
-  </mat-form-field>
+  </div>
 </mat-card>

@@ -10,13 +10,15 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/
 import { of } from 'rxjs';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../../core/snackbar.service';
+import { weatherFadeAnimation } from '../../../../animations/weather.animations';
 
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatAutocompleteModule, MatInputModule, MatCardModule, MatButtonModule, MatIconModule, HttpClientModule],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.scss'
+  styleUrl: './search.component.scss',
+  animations: [weatherFadeAnimation]
 })
 export class SearchComponent {
   @Output() searchResult = new EventEmitter<string[]>();
