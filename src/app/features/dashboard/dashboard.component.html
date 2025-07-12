@@ -1,0 +1,65 @@
+<section>
+    <div class="title-section">
+        <div class="title-content">
+            <div class="title-left">
+                <div class="app-icon">
+                    <mat-icon class="weather-icon">wb_sunny</mat-icon>
+                    <mat-icon class="clothing-icon">checkroom</mat-icon>
+                </div>
+                <div class="title-text">
+                    <h1>Weather-Based Outfit Recommender</h1>
+                    <p>Users can enter a city name to get the current weather and
+                        receive an outfit suggestion based on the temperature and weather condition.</p>
+                </div>
+            </div>
+            <div class="user-menu">
+                <div class="user-info">
+                    <mat-icon class="user-icon">person</mat-icon>
+                    <span class="user-label">User</span>
+                </div>
+                <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle theme" class="theme-toggle-button">
+                    <mat-icon>{{ isDarkTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+                </button>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User menu" class="menu-button">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" class="user-menu-dropdown">
+                    <button mat-menu-item (click)="logout()" class="logout-item">
+                        <mat-icon>logout</mat-icon>
+                        <span>Logout & Clear Memory</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
+        <div class="title-decoration">
+            <div class="decoration-line"></div>
+        </div>
+    </div>
+    <mat-grid-list [cols]="cols" rowHeight="250px" gutterSize="20px">
+        <!-- Loading Indicator -->
+        <mat-grid-tile [colspan]="cols" *ngIf="isLoading()" [@loadingSpin]="'loading'">
+            <mat-card [@cardSlide]>
+                <div class="loading-container">
+                    <mat-icon class="loading-icon" [@loadingSpin]="'loading'">refresh</mat-icon>
+                    <p>Loading weather data...</p>
+                </div>
+            </mat-card>
+        </mat-grid-tile>
+
+        <!-- First row: 2 columns, each colspan 2 (so each takes the full width, stacked) -->
+        <mat-grid-tile [colspan]="appSearch" [@gridTile]>
+            <app-search (citySelected)="onCitySelected($event)" (searchCleared)="onSearchCleared()"></app-search>
+        </mat-grid-tile>
+        <!-- Second row: 2 columns -->
+        <mat-grid-tile [colspan]="appResult" [@gridTile]>
+            <app-result [weather]="weather()" [@weatherFade]></app-result>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="appRecomandation" [@gridTile]>
+            <app-recomandation [weather]="weather()" [@weatherFade]></app-recomandation>
+        </mat-grid-tile>
+        <!-- Third row: 1 column, colspan 2 -->
+        <mat-grid-tile [colspan]="appHistory" [@gridTile]>
+            <app-history [history]="history()" (select)="showRecommendationPopup($event)"></app-history>
+        </mat-grid-tile>
+    </mat-grid-list>
+</section>

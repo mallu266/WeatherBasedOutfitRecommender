@@ -1,0 +1,36 @@
+<!-- Landing page when not authenticated -->
+<div class="container" *ngIf="!isLoggedIn()">
+  <mat-grid-list cols="1" rowHeight="100%" class="center-grid">
+    <mat-grid-tile>
+      <div class="auth-container">
+        <!-- Disclaimer Message -->
+        <div class="disclaimer-card">
+          <h2>Welcome to Weather-Based Outfit Recommender</h2>
+          <div class="disclaimer-content">
+            <p><strong>Important:</strong> Please enter a valid OpenWeatherMap API key to continue.</p>
+            <ul>
+              <li>Your API key is stored only in your browser's local memory</li>
+              <li>It will be cleared when you close the browser or clear your data</li>
+              <li>Make sure to use a valid API key from <a href="https://openweathermap.org/api" target="_blank">OpenWeatherMap</a></li>
+              <li>This application does not store your API key on any server</li>
+            </ul>
+          </div>
+        </div>
+        <!-- API Key Form -->
+        <form [formGroup]="apiKeyForm" (ngSubmit)="onSubmit()" class="api-form">
+          <mat-form-field appearance="outline">
+            <mat-label>OpenWeatherMap API Key</mat-label>
+            <input matInput id="apiKey" formControlName="apiKey" type="text" required placeholder="Enter your API key here" />
+            <mat-error *ngIf="apiKeyForm.get('apiKey')?.hasError('required') && apiKeyForm.get('apiKey')?.touched">
+              API Key is required
+            </mat-error>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit" [disabled]="apiKeyForm.invalid">Get Started</button>
+        </form>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
+
+<!-- Router outlet when authenticated -->
+<router-outlet *ngIf="isLoggedIn()"></router-outlet>

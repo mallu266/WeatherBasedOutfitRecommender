@@ -1,0 +1,24 @@
+<ng-container *ngIf="weather; else noData">
+  <mat-card [@weatherFade]>
+    <h3>Weather for {{ weather.name }}, {{ weather.sys?.country }}</h3>
+    <div class="weather-content">
+      <div class="temperature-section" [@temperatureChange]="weather ? 'new' : 'old'">
+        <mat-icon class="weather-icon" [@weatherIcon]>wb_sunny</mat-icon>
+        <p class="temperature">{{ weather.main?.temp }} °C</p>
+      </div>
+      <div class="weather-details">
+        <p>Weather: {{ weather.weather[0]?.description }}</p>
+        <p>Humidity: {{ weather.main?.humidity }}%</p>
+        <p>Wind: {{ weather.wind?.speed }} m/s</p>
+      </div>
+    </div>
+  </mat-card>
+</ng-container>
+<ng-template #noData>
+  <mat-card [@weatherFade]>
+    <div class="no-data">
+      <mat-icon>cloud_off</mat-icon>
+      <p>No weather data available.</p>
+    </div>
+  </mat-card>
+</ng-template>

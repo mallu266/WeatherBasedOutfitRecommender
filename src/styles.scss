@@ -1,0 +1,378 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* CSS Custom Properties for Theming */
+:root {
+  /* Light Theme Colors */
+  --primary-bg: #ffffff;
+  --secondary-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --accent-color: #667eea;
+  --accent-secondary: #764ba2;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+  --gold-accent: #ffd700;
+  
+  /* Component specific colors */
+  --search-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --result-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --recommendation-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --history-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  
+  /* Glass morphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme Colors */
+.dark-theme {
+  --primary-bg: #1a1a1a;
+  --secondary-bg: #2d2d2d;
+  --card-bg: #333333;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #999999;
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --accent-color: #7c8fff;
+  --accent-secondary: #9c6bff;
+  --success-color: #66bb6a;
+  --warning-color: #ffb74d;
+  --error-color: #ef5350;
+  --gold-accent: #ffd700;
+  
+  /* Component specific colors for dark theme */
+  --search-gradient: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  --result-gradient: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  --recommendation-gradient: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+  --history-gradient: linear-gradient(135deg, #742a2a 0%, #4a1c1c 100%);
+  
+  /* Glass morphism for dark theme */
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Apply theme colors to body */
+body {
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Global theme-aware styles */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Custom Dialog Styles to fix white background during animation */
+.custom-dialog-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px);
+}
+
+.custom-dialog-panel {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* Override Material Dialog default styles */
+.cdk-overlay-pane {
+  background: transparent !important;
+}
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Ensure dialog content has proper background */
+.mat-mdc-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mat-mdc-dialog-surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* Menu alignment fixes */
+.mat-mdc-menu-panel {
+  margin-top: 8px !important;
+  min-width: 200px !important;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px var(--shadow-color) !important;
+}
+
+.mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
+.mat-mdc-menu-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease !important;
+  color: var(--text-primary) !important;
+
+  &:hover {
+    background: var(--glass-bg) !important;
+    color: var(--accent-color) !important;
+  }
+
+  .mat-mdc-menu-item-text {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  mat-icon {
+    margin-right: 0 !important;
+    color: var(--accent-color) !important;
+  }
+}
+
+/* CDK overlay positioning fixes */
+.cdk-overlay-container {
+  z-index: 1000 !important;
+}
+
+.cdk-overlay-pane {
+  pointer-events: auto !important;
+}
+
+/* Theme-aware Material components */
+.mat-mdc-snack-bar-container {
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px var(--shadow-color) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.mat-mdc-snack-bar-label {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* Success Snackbar */
+.success-snackbar {
+  .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, var(--success-color) 0%, rgba(76, 175, 80, 0.9) 100%) !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.2) !important;
+  }
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+  }
+}
+
+/* Error Snackbar */
+.error-snackbar {
+  .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, var(--error-color) 0%, rgba(244, 67, 54, 0.9) 100%) !important;
+    border: 1px solid rgba(244, 67, 54, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(244, 67, 54, 0.2) !important;
+  }
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+  }
+}
+
+/* Warning Snackbar */
+.warning-snackbar {
+  .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, var(--warning-color) 0%, rgba(255, 152, 0, 0.9) 100%) !important;
+    border: 1px solid rgba(255, 152, 0, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(255, 152, 0, 0.2) !important;
+  }
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+  }
+}
+
+/* Info Snackbar */
+.info-snackbar {
+  .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, var(--accent-color) 0%, rgba(102, 126, 234, 0.9) 100%) !important;
+    border: 1px solid rgba(102, 126, 234, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2) !important;
+  }
+
+  .mat-mdc-snack-bar-label {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+  }
+}
+
+/* Dark theme specific snackbar adjustments */
+.dark-theme {
+  .success-snackbar .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, #66bb6a 0%, rgba(102, 187, 106, 0.9) 100%) !important;
+  }
+
+  .error-snackbar .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, #ef5350 0%, rgba(239, 83, 80, 0.9) 100%) !important;
+  }
+
+  .warning-snackbar .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, #ffb74d 0%, rgba(255, 183, 77, 0.9) 100%) !important;
+  }
+
+  .info-snackbar .mat-mdc-snack-bar-container {
+    background: linear-gradient(135deg, #7c8fff 0%, rgba(124, 143, 255, 0.9) 100%) !important;
+  }
+}
+
+/* Snackbar animations */
+@keyframes snackbarSlideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes snackbarSlideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.mat-mdc-snack-bar-container {
+  animation: snackbarSlideIn 0.3s ease-out !important;
+}
+
+.mat-mdc-snack-bar-container.ng-leave {
+  animation: snackbarSlideOut 0.3s ease-in !important;
+}
+
+/* Snackbar positioning improvements */
+.cdk-overlay-pane {
+  pointer-events: auto !important;
+}
+
+/* Responsive snackbar */
+@media (max-width: 768px) {
+  .mat-mdc-snack-bar-container {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+}
+
+/* Smooth theme transitions */
+.theme-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme toggle animation */
+@keyframes themeToggle {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+.theme-toggle-animation {
+  animation: themeToggle 0.6s ease-in-out;
+}
