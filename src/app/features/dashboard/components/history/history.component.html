@@ -1,6 +1,6 @@
 <mat-card>
     <h3>Last 5 Searches</h3>
-    <ul *ngIf="history && history.length; else noHistory">
+    <ul *ngIf="history && history.length; else noHistory" [@historyStagger]="history">
         <li *ngFor="let item of history" (click)="selectHistory(item)" style="cursor:pointer;">
             <strong>{{ item.cityName }}, {{ item.weather.sys?.country }}</strong> - {{ item.weather.main?.temp }} °C, {{
             item.weather.weather[0]?.description }}

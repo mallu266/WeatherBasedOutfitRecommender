@@ -1,18 +1,26 @@
 <ng-container *ngIf="weather; else noData">
-  <mat-card>
+  <mat-card [@weatherFade]>
     <h3>Recommendations</h3>
-    <ul>
+    <ul class="scrollContainer">
       <li *ngIf="weather.weather?.[0]?.main === 'Rain' || weather.weather?.[0]?.main === 'Drizzle'">Take an umbrella ☔</li>
       <li *ngIf="weather.main?.temp && weather.main.temp < 15">Wear a jacket 🧥</li>
-      <li *ngIf="weather.weather?.[0]?.main === 'Clear' && weather.main?.temp && weather.main.temp > 20">Sunglasses suggested</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Clear' && weather.main?.temp && weather.main.temp > 20">Sunglasses suggested 😎</li>
       <li *ngIf="weather.main?.temp && weather.main.temp >= 30">Stay hydrated and avoid direct sun ☀️</li>
       <li *ngIf="weather.weather?.[0]?.main === 'Snow'">Wear warm boots and coat 🥾🧥</li>
       <li *ngIf="weather.weather?.[0]?.main === 'Thunderstorm'">Stay indoors if possible ⚡</li>
       <li *ngIf="weather.weather?.[0]?.main === 'Clouds' && weather.main?.temp && weather.main.temp > 15">Light sweater recommended</li>
-      <li *ngIf="!weather.weather?.[0]?.main && !weather.main?.temp">No specific recommendation.</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp < 10">Wear a heavy coat and gloves 🧤</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp > 25">Consider wearing light, breathable clothing 👕</li>
+      <li *ngIf="weather.wind?.speed && weather.wind.speed > 10">Windy conditions - secure loose items 🍃</li>
+      <li *ngIf="weather.main?.humidity && weather.main.humidity > 80">High humidity - consider moisture-wicking fabrics 💧</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Fog'">Low visibility - wear bright colors for safety 🌫️</li>
+      <li *ngIf="weather.weather?.[0]?.main === 'Mist'">Light rain possible - carry a light rain jacket 🌧️</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp < 5">Very cold - wear thermal underwear and warm layers 🧥</li>
+      <li *ngIf="weather.main?.temp && weather.main.temp > 35">Extreme heat - stay in air conditioning if possible 🔥</li>
+      <li *ngIf="!weather.weather?.[0]?.main && !weather.main?.temp">No specific recommendation available.</li>
     </ul>
   </mat-card>
 </ng-container>
 <ng-template #noData>
-  <mat-card>No recommendations available.</mat-card>
+  <mat-card [@weatherFade]>No recommendations available.</mat-card>
 </ng-template>

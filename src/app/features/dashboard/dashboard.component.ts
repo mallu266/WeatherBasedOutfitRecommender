@@ -16,6 +16,14 @@ import { SnackbarService } from '../../core/snackbar.service';
 import { WeatherStateService, WeatherData, SearchHistoryItem } from '../../core/services/weather-state.service';
 import { WeatherService } from '../../core/services/weather.service';
 import { AppComponent } from '../../app.component';
+import { 
+  weatherFadeAnimation, 
+  cardSlideAnimation, 
+  loadingAnimation, 
+  historyStaggerAnimation,
+  gridTileAnimation,
+  errorSlideAnimation
+} from '../../animations/weather.animations';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +42,15 @@ import { AppComponent } from '../../app.component';
     MatDialogModule
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  animations: [
+    weatherFadeAnimation,
+    cardSlideAnimation,
+    loadingAnimation,
+    historyStaggerAnimation,
+    gridTileAnimation,
+    errorSlideAnimation
+  ]
 })
 export class DashboardComponent {
   // Inject services
@@ -51,7 +67,7 @@ export class DashboardComponent {
   appSearch = 2;
   appResult = 1;
   appRecomandation = 1;
-  appHistory = 2;
+  appHistory = 1;
 
   // Computed values for template
   weather = computed(() => this.weatherStateService.currentWeather());
@@ -95,11 +111,11 @@ export class DashboardComponent {
   }
 
   private setDefaultLayout(): void {
-    this.cols = 2;
-    this.appSearch = 2;
+    this.cols = 3;
+    this.appSearch = 3;
     this.appResult = 1;
     this.appRecomandation = 1;
-    this.appHistory = 2;
+    this.appHistory = 1;
   }
 
   onCitySelected(selectedCity: string): void {
@@ -160,6 +176,11 @@ export class DashboardComponent {
       data: { weather: historyItem.weather },
       width: '350px',
       maxWidth: '90vw',
+      backdropClass: 'custom-dialog-backdrop',
+      panelClass: 'custom-dialog-panel',
+      hasBackdrop: true,
+      disableClose: false,
+      autoFocus: false
     });
   }
 

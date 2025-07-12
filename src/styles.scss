@@ -17,3 +17,39 @@ html {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Custom Dialog Styles to fix white background during animation */
+.custom-dialog-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px);
+}
+
+.custom-dialog-panel {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* Override Material Dialog default styles */
+.cdk-overlay-pane {
+  background: transparent !important;
+}
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Ensure dialog content has proper background */
+.mat-mdc-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mat-mdc-dialog-surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
